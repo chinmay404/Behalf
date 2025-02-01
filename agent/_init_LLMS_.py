@@ -28,7 +28,7 @@ def get_deepseek():
     try:
         model = ChatOpenAI(
             model="deepseek-chat",
-            api_key="sk-8237a6bdb61a48638e082942217a609a",
+            api_key="sk-.....",
             base_url="https://api.deepseek.com",
             temperature=1.0
         )

@@ -7,7 +7,7 @@ import os
 def get_google_llm():
     google_llm = LLM(
     model='gemini/gemini-1.5-flash',
-    api_key="AIzaSyDG5pfBtxgRcpUnmca5Cj4WzQFZRXTddsU"
+    api_key="AI....."
     # api_key = os.getenv("GOOGLE_API_KEY")
     )
     return google_llm
@@ -24,7 +24,7 @@ def get_local_llm(model_name="ollama/deepseek-r1:7b"):
 
 def get_groq_llm():
     groq_llm = ChatGroq(
-            api_key="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",
+            api_key="gs....",
             model="deepseek-r1-distill-llama-70b",
             # api_key = os.getenv("GOOGLE_API_KEY")
         )
