@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Behalf - Voice Agent</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #000;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            transition: background-color 0.5s ease;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, #4CAF50, #2196F3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: #9CA3AF;
+            margin-bottom: 3rem;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .control-group {
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            color: #9CA3AF;
+            margin-bottom: 0.5rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #1F2937;
+            border: 1px solid #374151;
+            color: white;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        select:hover,
+        select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .mic-button {
+            width: 14rem;
+            height: 14rem;
+            border-radius: 50%;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            margin: 0 auto 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            touch-action: none;
+        }
+
+        .mic-button::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(76, 175, 80, 0.4) 0%, rgba(76, 175, 80, 0) 90%);
+            animation: pulse 2s infinite;
+        }
+
+        .mic-button.recording::before {
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.4) 0%, rgba(239, 68, 68, 0) 90%);
+        }
+
+        .mic-button.playing::before {
+            background: radial-gradient(circle, rgba(33, 150, 243, 0.4) 0%, rgba(33, 150, 243, 0) 90%);
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.9;
+            }
+
+            70% {
+                transform: scale(1.2);
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: scale(0.95);
+                opacity: 0.9;
+            }
+        }
+
+        .mic-icon {
+            width: 4rem;
+            height: 4rem;
+            fill: #4CAF50;
+            transition: all 0.3s ease;
+        }
+
+        .mic-button:hover .mic-icon {
+            transform: scale(1.1);
+        }
+
+        .mic-button.recording .mic-icon {
+            fill: #EF4444;
+        }
+
+        .timer {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1rem 0 2rem;
+            display: none;
+            color: #4CAF50;
+        }
+
+        .timer.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background-color: #1F2937;
+            border: 1px solid #374151;
+            color: white;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background-color: #2F3B4E;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-area {
+            width: 100%;
+            min-height: 120px;
+            background-color: #1F2937;
+            border: 1px solid #374151;
+            color: white;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            transition: all 0.3s ease;
+            resize: none;
+            overflow-y: auto;
+        }
+
+        .content-area:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+
+        body.recording {
+            background-color: #330000;
+        }
+
+        body.recording .btn,
+        body.recording select,
+        body.recording .content-area {
+            border-color: #EF4444;
+        }
+
+        body.recording .timer {
+            color: #EF4444;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Behalf</h1>
+        <h2>Agent will talk behalf of you</h2>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="language">Language</label>
+                <select id="language">
+                    <option value="en">English</option>
+                    <option value="es">Spanish</option>
+                    <option value="fr">French</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="region">Region</label>
+                <select id="region">
+                    <option value="us">US</option>
+                    <option value="eu">EU</option>
+                    <option value="asia">Asia</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="mic-button" id="recordButton">
+            <svg class="mic-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
+                <path
+                    d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
+            </svg>
+        </button>
+
+        <div class="timer" id="timer">00:00</div>
+
+        <div class="buttons">
+            <button class="btn">Get In Touch</button>
+            <button class="btn">Learn More</button>
+        </div>
+
+        <div class="content-area" id="contentArea"></div>
+    </div>
+
+    <script>
+        const recordButton = document.getElementById('recordButton');
+        const timer = document.getElementById('timer');
+        const contentArea = document.getElementById('contentArea');
+        let isRecording = false;
+        let isAudioPlaying = false; // Track whether audio is playing
+        let timerInterval;
+        let seconds = 0;
+        let mediaRecorder;
+        let audioChunks = [];
+        let audioPlayer; // To store the audio player for playback
+
+        // Request microphone access
+        navigator.mediaDevices.getUserMedia({audio: true})
+            .then(stream => {
+                mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, {type: 'audio/wav'});
+                    sendAudioToBackend(audioBlob);
+                    audioChunks = [];
+                };
+            })
+            .catch(error => {
+                console.error('Error accessing microphone:', error);
+                updateContent('Error: Unable to access microphone. Please check your permissions.');
+            });
+
+        recordButton.addEventListener('mousedown', startRecording);
+        recordButton.addEventListener('mouseup', stopRecording);
+        recordButton.addEventListener('mouseleave', stopRecording);
+        recordButton.addEventListener('touchstart', startRecording);
+        recordButton.addEventListener('touchend', stopRecording);
+
+        function startRecording() {
+            if (!isRecording) {
+                // If audio is playing, stop it before starting a new recording
+                if (isAudioPlaying) {
+                    stopAudioPlayback();
+                }
+
+                isRecording = true;
+                recordButton.classList.add('recording');
+                timer.classList.add('active');
+                document.body.classList.add('recording');
+                seconds = 0;
+                updateContent("Agent is listening...");
+                mediaRecorder.start();
+                timerInterval = setInterval(updateTimer, 1000);
+            }
+        }
+
+        function stopRecording() {
+            if (isRecording) {
+                isRecording = false;
+                recordButton.classList.remove('recording');
+                timer.classList.remove('active');
+                document.body.classList.remove('recording');
+                clearInterval(timerInterval);
+                mediaRecorder.stop();
+                updateContent("Agent is processing your request. Please wait...");
+            }
+        }
+
+        function updateTimer() {
+            seconds++;
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            timer.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        }
+
+        function sendAudioToBackend(audioBlob) {
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'recording.wav');
+            formData.append('language', document.getElementById('language').value);
+            formData.append('region', document.getElementById('region').value);
+
+            fetch('/process-audio', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    updateContent(data.message || "Hello! I'm your Behalf agent. How can I assist you today?");
+                    playAudioResponse(data.audio_file);
+                })
+                .catch(error => {
+                    console.error('Error sending audio to backend:', error);
+                    updateContent("Sorry, there was an error processing your request. Please try again.");
+                });
+        }
+
+        async function playAudioResponse(text) {
+            // Stop any currently playing audio
+            if (isAudioPlaying) {
+                stopAudioPlayback();
+            }
+
+            try {
+                // Send the text to the backend to generate the audio response
+                const response = await fetch('/play-audio', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({text}),
+                });
+
+                const data = await response.json();
+
+                if (data.audio_base64) {
+                    // Create an audio element with the base64 audio data
+                    const audioBlob = new Blob([Uint8Array.from(atob(data.audio_base64), c => c.charCodeAt(0))], {
+                        type: 'audio/mp3',
+                    });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+
+                    // Play the audio
+                    audioPlayer = new Audio(audioUrl);
+                    audioPlayer.play();
+                    isAudioPlaying = true;
+
+                    audioPlayer.onended = () => {
+                        isAudioPlaying = false;
+                        URL.revokeObjectURL(audioUrl); // Clean up the object URL
+                    };
+                } else {
+                    console.error('No audio received:', data);
+                    alert('Failed to get audio response.');
+                }
+            } catch (error) {
+                console.error('Error fetching or playing audio:', error);
+                alert('An error occurred while processing the audio.');
+            }
+        }
+
+        function stopAudioPlayback() {
+            if (audioPlayer) {
+                audioPlayer.pause();
+                audioPlayer.currentTime = 0;
+                isAudioPlaying = false;
+            }
+        }
+
+        function updateContent(text) {
+            contentArea.textContent = text;
+        }
+
+    </script>
+
+</body>
+
+</html>
