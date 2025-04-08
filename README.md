@@ -2,7 +2,7 @@
 
 # 🗣️ Behalf 
 
-## FLOW : (SEE AT END OF MD)
+## 🔁 [FLOW](#flowchart) : (SEE AT END )
 
 ## 🔥 The Problem This AI Negotiation Agent Solves
 ❌ Existing Translation Apps Are Not Enough
@@ -81,4 +81,5 @@ This project is an **AI-powered negotiation assistant** that can:
 6️⃣ TTS (ElevenLabs) → Converts AI response to Realistic speech.
 ![image](https://github.com/user-attachments/assets/7093d8b4-3e05-49a6-92fe-7b6e6d497639)
 
+## 🧠 Flowchart <a name="flowchart"></a>
 ![Editor _ Mermaid Chart-2025-04-08-002435](https://github.com/user-attachments/assets/f9392206-2b42-4450-bac3-fb5fb621e36e)
