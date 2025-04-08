@@ -1,7 +1,1 @@
-langgraph 
-langsmith
-elevenlabs 
-playsound
-pyttsx3
-sounddevice
-keyboard
+langdetect

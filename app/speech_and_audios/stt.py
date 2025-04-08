@@ -8,7 +8,7 @@ def get_transcription(filename , client):
             model="whisper-large-v3",
             prompt="Specify context or spelling",  
             response_format="json", 
-            temperature=0.0  
+            temperature=0.5 
             )
             return transcription.text
     except Exception as e:

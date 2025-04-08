@@ -1,9 +1,9 @@
 import os
 from flask import Flask, request, jsonify, render_template
 from werkzeug.utils import secure_filename
-from gtts import gTTS
 import base64
 import tempfile
+from agent.speech_and_audios.stt import get_transcription
 
 app = Flask(__name__)
 
@@ -19,13 +19,12 @@ def allowed_file(filename):
 
 
 def process_audio(audio_path):
-    # Placeholder for any additional processing
     return "Processed text from audio file."
 
 
 def generate_audio_response_base64(text):
     """Generate audio response from text and return as base64."""
-    tts = gTTS(text)
+    tts = get_transcription(text)
     with tempfile.NamedTemporaryFile(delete=True, suffix='.mp3') as temp_audio:
         tts.save(temp_audio.name)
         with open(temp_audio.name, "rb") as audio_file:

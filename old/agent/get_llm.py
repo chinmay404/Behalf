@@ -4,16 +4,18 @@ from dotenv import load_dotenv
 import os
 
 
+load_dotenv()
+
+
 def get_google_llm():
     google_llm = LLM(
-    model='gemini/gemini-1.5-flash',
-    api_key="AI....."
-    # api_key = os.getenv("GOOGLE_API_KEY")
+        model='gemini/gemini-1.5-flash',
+        api_key=os.getenv("GOOGLE_API_KEY")
     )
     return google_llm
 
+
 def get_local_llm(model_name="ollama/deepseek-r1:7b"):
-    
     local_llm = LLM(
         model=model_name,
         base_url="http://localhost:11434",
@@ -24,8 +26,7 @@ def get_local_llm(model_name="ollama/deepseek-r1:7b"):
 
 def get_groq_llm():
     groq_llm = ChatGroq(
-            api_key="gs....",
-            model="deepseek-r1-distill-llama-70b",
-            # api_key = os.getenv("GOOGLE_API_KEY")
-        )
+        model="deepseek-r1-distill-llama-70b",
+        api_key=os.getenv("groq_api_key")
+    )
     return groq_llm
