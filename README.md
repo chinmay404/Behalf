@@ -1,6 +1,10 @@
-#STILL WORKING ON IT 
+![Editor _ Mermaid Chart-2025-04-08-002010](https://github.com/user-attachments/assets/e65a5e88-c510-4b37-b2e2-8989f668ad52)#STILL WORKING ON IT 
 
-# 🗣️ Behalf CrewAI, LLMs & ElevenLabs  
+# 🗣️ Behalf 
+
+## FLOW :
+![Editor _ Mermaid Chart-2025-04-08-002055](https://github.com/user-attachments/assets/1e8247e0-8c84-4df8-8006-b533131b7613)
+
 
 ## 🔥 The Problem This AI Negotiation Agent Solves
 ❌ Existing Translation Apps Are Not Enough
