@@ -16,10 +16,10 @@ engine = pyttsx3.init()
 
 def text_to_speech_eleven_labs(text: str) -> str:
     # Load API key from .env
-    env_path = os.path.join(os.path.dirname(__file__), '..', '.env')
-    load_dotenv(dotenv_path=env_path)
+    # env_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+    # load_dotenv(dotenv_path=env_path)
 
-    api_key = os.getenv("elevenlabs_api_key")
+    api_key = ""
     if not api_key:
         print("Error: API key not found in .env file.")
         return None
