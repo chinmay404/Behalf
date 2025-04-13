@@ -18,7 +18,7 @@ class LLM:
             llm = ChatGoogleGenerativeAI(
                 model="gemini-2.0-flash",
                 api_key=api_key,
-                temperature=0.8,
+                temperature=1.0,
                 max_tokens=None,
                 timeout=None,
                 max_retries=2,
@@ -42,7 +42,6 @@ class LLM:
                 api_key=str(api_key),
                 model_name="qwen-qwq-32b"
             )
-
             return llm
         except Exception as e:
             print("Error init LLM : ", e)

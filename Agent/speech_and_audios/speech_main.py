@@ -24,3 +24,11 @@ def record_and_transcribe():
         return transcript
     except Exception as e:
         print(f"Error: {e}")
+
+
+def record_and_transcribe():
+    try:
+        transcript = get_transcription(audio_path, client)
+        return transcript
+    except Exception as e:
+        print(f"Error: {e}")

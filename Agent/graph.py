@@ -46,14 +46,26 @@ def get_graph():
         graph = None
 
 
-g = get_graph()
-messges = [HumanMessage(
-    content="i wnat to talk with this German person about getrting apples in very cheap price")]
+# g = get_graph()
+# messges = [HumanMessage(
+#     content="i wnat to talk with this German person about getrting apples in very cheap price")]
 
-config = {"configurable": {"thread_id": "1234"}}
-res = g.invoke({"messages": messges,
-                "goal": "I want to talk with this German person about getting apples in very cheap price",
-                "UserLang": "en",
-                "OtherPersonLang": "de",
-                "Plan": None,
-                "invoked_by": "User"} , config=config)
+# config = {"configurable": {"thread_id": "1234"}}
+# res = g.invoke({"messages": messges,
+#                 "goal": "I want to talk with this German person about getting apples in very cheap price",
+#                 "UserLang": "en",
+#                 "OtherPersonLang": "de",
+#                 "Plan": None,
+#                 "invoked_by": "User"} , config=config)
+
+
+def invoke_graph(user_id :str, conversion_id : str, audio_bytes:bytes)->(str, bytes):
+    speech_main
+    config = {"configurable": {"thread_id": "1234"}}
+    res = g.invoke({"messages": messges,
+                    "goal": "I want to talk with this German person about getting apples in very cheap price",
+                    "UserLang": "en",
+                    "OtherPersonLang": "de",
+                    "Plan": None,
+                    "invoked_by": "User"}, config=config)
+    pass
