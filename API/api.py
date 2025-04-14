@@ -1,14 +1,19 @@
 # app/api.py
 import base64
 import uuid
+import asyncio
+import aiofiles
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse
-from .utils import process_audio_in_memory
-from .models import ConfigRequest
+from .utils import process_response, save_audio_file
+from .models import ConfigRequest, ResponseConfigs
+
+
 router = APIRouter()
 
-@router.post("/audio_input")
-async def process_audio_endpoint(user_id: str, conversion_id: str,config : ConfigRequest , audio: UploadFile = File(...)):
+
+@router.post("/conversation")
+async def conversation_endoint(conversion_id: str, config: ConfigRequest, ResponseConfigs: ResponseConfigs, audio: UploadFile = File(...)):
     """
     Endpoint to receive an audio file along with user_id and conversion_id,
     processes the audio in memory, and returns AI response text and a TTS audio file
@@ -16,32 +21,36 @@ async def process_audio_endpoint(user_id: str, conversion_id: str,config : Confi
     """
     try:
         audio_bytes = await audio.read()
-    
+
         unique_id = uuid.uuid4().hex
+        filename = asyncio.create_task(save_audio_file(
+            config.user_id, conversion_id, audio_bytes))
+        if filename is None:
+            raise HTTPException(
+                status_code=500, detail="Failed to save audio file.")
+        else:
+            try:
+                Response = process_response(config.user_id,
+                                            conversion_id,
+                                            filename)
+            except Exception as e:
+                raise HTTPException(
+                    status_code=500, detail=f"AI Respinse or Audio processing failed: {str(e)}")
 
+            # encoded_audio = base64.b64encode(process_response).decode("utf-8")
 
-        try:
-            transcript, processed_audio_bytes = process_audio_in_memory(user_id,
-                                                                        conversion_id,
-                                                                        audio_bytes)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"AI Respinse or Audio processing failed: {str(e)}")
-
-        encoded_audio = base64.b64encode(processed_audio_bytes).decode("utf-8")
-        
-        return JSONResponse(
-            status_code=200,
-            content={
-                "user_id": user_id,
-                "conversion_id": conversion_id,
-                "transcript": transcript,
-                "processed_audio": encoded_audio  
-            }
-        )
+            return JSONResponse(
+                status_code=200,
+                content={
+                    "user_id": config.user_id,
+                    "conversion_id": conversion_id,
+                    "transcript": Response.transcript,
+                    "translation": "Translated text here",
+                    "processed_audio": Response.encoded_audio
+                }
+            )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
 
 
 @router.post("/getTTS")
@@ -53,12 +62,12 @@ def get_tts(user_id: str, conversion_id: str, text: str):
 
         dummy_audio_bytes = b"Dummy audio data for TTS."
         encoded_audio = base64.b64encode(dummy_audio_bytes).decode("utf-8")
-        
+
         return JSONResponse(
             status_code=200,
             content={
-                "tts": encoded_audio  
+                "tts": encoded_audio
             }
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) 
+        raise HTTPException(status_code=500, detail=str(e))

@@ -5,7 +5,7 @@ def get_transcription(filename , client):
         with open(filename, "rb") as file:
             transcription = client.audio.transcriptions.create(
             file=(filename, file.read()), 
-            model="whisper-large-v3",
+            model="whisper-large-v3-turbo",
             prompt="Specify context or spelling",  
             response_format="json", 
             temperature=0.5 

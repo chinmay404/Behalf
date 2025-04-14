@@ -2,3 +2,4 @@ langdetect
 python-multipart
 fastapi[standard]
 mangum
+aiofiles

@@ -9,6 +9,9 @@ from Agent.tools.Tools import ToolList
 from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.memory import MemorySaver
 from Agent.speech_and_audios import speech_main
+from Agent.models.Response_Request import ConfigRequest, ResponseConfigs
+
+
 def get_graph():
     memory = MemorySaver()
     try:
@@ -32,10 +35,7 @@ def get_graph():
             }
         )
         builder.add_edge("tools", "assistant")
-        builder.add_conditional_edges("IsGoalCompleted", AllNodes["assistant"],  path_map={
-            True: END,
-            False: "assistant"
-        })
+        builder.add_conditional_edges("IsGoalCompleted", AllNodes["assistant"],  path_map={END, "assistant"})
 
         # Compilin Graph
         graph = builder.compile(checkpointer=memory)
@@ -50,22 +50,35 @@ def get_graph():
 # messges = [HumanMessage(
 #     content="i wnat to talk with this German person about getrting apples in very cheap price")]
 
-# config = {"configurable": {"thread_id": "1234"}}
+# config = {"configurable": {"thread_id": "12"}}
 # res = g.invoke({"messages": messges,
 #                 "goal": "I want to talk with this German person about getting apples in very cheap price",
 #                 "UserLang": "en",
 #                 "OtherPersonLang": "de",
 #                 "Plan": None,
-#                 "invoked_by": "User"} , config=config)
+#                 "invoked_by": "User"}, config=config)
 
 
-def invoke_graph(user_id :str, conversion_id : str, audio_bytes:bytes)->(str, bytes):
-    speech_main
-    config = {"configurable": {"thread_id": "1234"}}
-    res = g.invoke({"messages": messges,
-                    "goal": "I want to talk with this German person about getting apples in very cheap price",
-                    "UserLang": "en",
-                    "OtherPersonLang": "de",
-                    "Plan": None,
-                    "invoked_by": "User"}, config=config)
-    pass
+def invoke_graph(user_id: str,
+                 conversion_id: str,
+                 filename: str,
+                 graph) -> (str, bytes):
+    text_res = speech_main.get_transcription(filename)
+    if text_res is None:
+        raise ValueError("Error in Transcription")
+        return None, None
+    else:
+        try:
+            g = graph
+            messges = [HumanMessage(
+                content=text_res)]
+            config = {"configurable": {"thread_id": conversion_id}}
+       g     res = g.invoke({"messages": messges,
+                            "goal": text_res,
+                            "UserLang": "en",
+                            "OtherPersonLang": "de",
+                            "Plan": None,
+                            "invoked_by": user_id}, config=config)
+            return res
+        except Exception as e:
+            print(f"Error in graph invocation: {e}")

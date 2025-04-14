@@ -26,9 +26,10 @@ def record_and_transcribe():
         print(f"Error: {e}")
 
 
-def record_and_transcribe():
+def get_transcription(filename):
     try:
-        transcript = get_transcription(audio_path, client)
-        return transcript
+        with open(filename, "rb") as file:
+            transcription = get_transcription(filename, client)
+            return transcription
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error At transcription Speech_main: {e}")
